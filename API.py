@@ -5,6 +5,8 @@ import logging
 from typing import Any, Optional
 import re
 
+CAMPO_SOLUCAO_DESEJADA = "[LM] [F] Solução desejada"
+
 def padronizar_telefone(numero: Optional[str]) -> str:
     if not numero:
         return "Não Informado"
@@ -34,7 +36,10 @@ async def webhook_processor(data: models.RDStationWebhook, TARGET_URL: str, logg
     telefone_bruto = lead.personal_phone
     telefone_padronizado = padronizar_telefone(telefone_bruto)
     
-    produto_interesse_lead = lead.last_conversion.content.solucao_desejada or "Não Informado"
+    if lead.custom_fields and lead.custom_fields.get(CAMPO_SOLUCAO_DESEJADA):
+        produto_interesse_lead = lead.custom_fields.get(CAMPO_SOLUCAO_DESEJADA)
+    else:
+        produto_interesse_lead = "Não Informado"
 
     payload_to_send = models.NewRequestData(
         nome=nome_lead,
