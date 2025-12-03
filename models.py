@@ -1,25 +1,19 @@
-from typing import List, Optional, Any, Dict
-from pydantic import BaseModel, Field
+from typing import List, Optional, Dict, Any
+from pydantic import BaseModel
 from pydantic_settings import BaseSettings
 
 class Settings(BaseSettings):
-    
+    """Carrega as variáveis de ambiente."""
     TARGET_URL: str
+    DEBUG: bool = False
 
     class Config:
-
         env_file = "var.env" 
         env_file_encoding = 'utf-8'
-
-class ConversionContent(BaseModel):
-    solucao_desejada: Optional[str] = Field(None, alias="[LM] [F] Solução desejada")
-    
-class Config:
-    populate_by_name = True
-    extra = "allow"        
+        extra = 'allow'
 
 class LastConversion(BaseModel):
-    content: ConversionContent
+    content: Optional[Dict[str, Any]] = None 
     class Config:
         extra = "allow"
 
@@ -27,12 +21,16 @@ class Lead(BaseModel):
     name: str
     personal_phone: Optional[str] = None
     last_conversion: LastConversion
+    
+    custom_fields: Optional[Dict[str, Any]] = None 
 
-class Config:
+    class Config:
         extra = "allow"
 
 class RDStationWebhook(BaseModel):
     leads: List[Lead]
+    class Config:
+        extra = "allow"
 
 class NewRequestData(BaseModel):
     nome: str

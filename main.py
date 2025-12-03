@@ -13,7 +13,6 @@ app = FastAPI(
     description="Receber webhook rd station"
 )
 
-
 @app.post("/webhook-rdstation/", response_model=models.NewRequestData)
 async def webhook_endpoint(data: models.RDStationWebhook):
     return await API.webhook_processor(data, settings.TARGET_URL, logger)
