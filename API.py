@@ -2,7 +2,7 @@ import requests
 import models
 from fastapi import HTTPException
 import logging
-from typing import Any, Optional
+from typing import Optional
 import re
 
 CAMPO_SOLUCAO_DESEJADA = "[LM] [F] Solução desejada"
